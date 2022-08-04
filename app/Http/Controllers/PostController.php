@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -14,7 +15,9 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        $posts = Post::where('user_id', auth()->id())->get();
+
+        return view('posts.index', compact('posts'));
     }
 
     /**
@@ -36,8 +39,8 @@ class PostController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'caption'=>'required|string',
-            'image'=>'required|mimes:jpg,png'
+            'caption' => 'required|string',
+            'image' => 'required|mimes:jpg,png'
         ]);
 
         $post = new Post;
@@ -45,7 +48,7 @@ class PostController extends Controller
         $post->user_id = auth()->id();
         $post->image = $request->image->store('images');
         $post->save();
-        return redirect()->back();
+        return redirect()->back()->with('success','Post Created Successfully');
     }
 
     /**
@@ -90,6 +93,11 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        if(Storage::exists($post->image)){
+            Storage::delete($post->image);
+        }
+        $post->delete();
+
+        return back()->with('success','Post deleted successfully');
     }
 }

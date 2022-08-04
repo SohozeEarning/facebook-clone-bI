@@ -14,13 +14,23 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
 Auth::routes();
 
-Route::get('posts/create',[PostController::class,'create'])->name('posts.create');;
-Route::post('posts/create',[PostController::class,'store'])->name('posts.store');
+Route::group(
+    [
+        'middleware' => 'auth',  // middleware 
+        'controller' => PostController::class, // gennearlize controller
+        'as' => 'posts.', // gennearlize name prefix
+        'prefix' => 'posts/' // gennearlize url prefix
+    ],
+    function () {
+        Route::get('create',  'create')->name('create');
+        Route::get('index', 'index')->name('index');
+        Route::post('create', 'store')->name('store');
+        Route::delete('destroy/{post}','destroy')->name('destroy');
+    }
+);
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
