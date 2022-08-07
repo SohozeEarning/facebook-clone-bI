@@ -27,8 +27,11 @@ Route::group(
     function () {
         Route::get('create',  'create')->name('create');
         Route::get('index', 'index')->name('index');
+        Route::get('show/{post}', 'show')->name('show');
+        Route::get('edit/{post}', 'edit')->name('edit');
         Route::post('create', 'store')->name('store');
-        Route::delete('destroy/{post}','destroy')->name('destroy');
+        Route::put('update/{post}', 'update')->name('update');
+        Route::delete('destroy/{post}', 'destroy')->name('destroy');
     }
 );
 

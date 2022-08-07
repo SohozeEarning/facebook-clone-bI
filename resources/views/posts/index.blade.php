@@ -32,7 +32,7 @@
                                             {{ $post->id }}
                                         </td>
                                         <td>
-                                            {{ $post->caption }}
+                                            {{ Str::limit($post->caption,100) }}
                                         </td>
                                         <td>
                                             <img src="{{ Storage::url($post->image) }}" class=" rounded-top" height="150px"
@@ -40,8 +40,8 @@
                                         </td>
                                         <td>
                                             <div class="btn-group gap-1">
-                                                <a class="btn btn-dark btn-sm" href="">Edit</a>
-                                                <a class="btn btn-dark btn-sm" href="">View</a>
+                                                <a class="btn btn-dark btn-sm" href="{{route('posts.edit',$post->id)}}">Edit</a>
+                                                <a class="btn btn-dark btn-sm" href="{{route('posts.show',$post->id)}}">View</a>
                                                 <form action="{{ route('posts.destroy', $post->id) }}" method="post">
                                                     @csrf
                                                     @method('delete')

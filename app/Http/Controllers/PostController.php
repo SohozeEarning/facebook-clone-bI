@@ -59,7 +59,8 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+        
+        return view('posts.show',compact('post'));
     }
 
     /**
@@ -70,7 +71,7 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        //
+        return view('posts.edit',compact('post'));
     }
 
     /**
@@ -82,7 +83,20 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        //
+        $request->validate([
+            'image' => 'nullable|mimes:jpeg,jpg,png',
+            'caption'=>'required|string'
+        ]);
+
+        if($request->image){
+            if(Storage::exists($post->image)){
+                Storage::delete($post->image);
+            }
+            $post->image = $request->image->store('images');
+        }
+        $post->caption = $request->caption;
+        $post->update();
+        return redirect()->route('posts.index')->with('success','Post updated');
     }
 
     /**
